@@ -73,7 +73,35 @@ class VOCDataset(Dataset):
             boxes.append(bbox)
 
         if len(boxes) == 0:
-            return self.__getitem__((idx + 1) % len(self))
+            # Skip this image and try the next one, up to a limit to prevent infinite loops
+            for _ in range(len(self)):
+                idx = (idx + 1) % len(self)
+                image_id = self.image_ids[idx]
+                img_path = os.path.join(self.img_dir, f"{image_id}.jpg")
+                ann_path = os.path.join(self.ann_dir, f"{image_id}.xml")
+
+                img = Image.open(img_path).convert("RGB")
+                tree = ET.parse(ann_path)
+                root = tree.getroot()
+
+                boxes, labels = [], []
+                for obj in root.findall("object"):
+                    label = obj.find("name").text
+                    labels.append(self.classes.index(label))
+
+                    bndbox = obj.find("bndbox")
+                    bbox = [
+                        float(bndbox.find("xmin").text),
+                        float(bndbox.find("ymin").text),
+                        float(bndbox.find("xmax").text),
+                        float(bndbox.find("ymax").text),
+                    ]
+                    boxes.append(bbox)
+                if len(boxes) > 0:
+                    break
+            else:
+                # If no valid image is found after checking all, raise an error or return a default
+                raise ValueError("No image with bounding boxes found in the dataset.")
 
             
         boxes = torch.as_tensor(boxes, dtype=torch.float32)

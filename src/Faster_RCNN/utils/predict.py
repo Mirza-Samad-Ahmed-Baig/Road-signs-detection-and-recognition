@@ -7,7 +7,7 @@ from utils.dataset import VOCDataset
 from utils.engine import show_predictions
 from utils.engine import load_custom_fasterrcnn_model
 
-def dataset_predict(experiment_name,model,dataset_path,imgsz=416):
+def dataset_predict(experiment_name,dataset_path,imgsz=416):
 
     """
     Valuta un modello Faster R-CNN su un set di dati di test utilizzando i pesi del miglior modello dell'esperimento passato in input.

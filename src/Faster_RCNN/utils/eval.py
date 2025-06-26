@@ -12,7 +12,7 @@ from utils.engine import load_custom_fasterrcnn_model
 
 
 
-def dataset_eval(experiment_name,model,dataset_path,imgsz=416):
+def dataset_eval(experiment_name,model,dataset_path,imgsz=416,batch_size=1):
     
     #EVALUATION SUL TEST SET CON IL BEST MODEL SELEZIONATO
     """
@@ -30,7 +30,7 @@ def dataset_eval(experiment_name,model,dataset_path,imgsz=416):
         None
 
     """
-    batch_size=1 
+
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     dataset_test = VOCDataset(dataset_path, image_set="test")
     data_loader_test = DataLoader(dataset_test, batch_size, shuffle=True, collate_fn=collate_fn)

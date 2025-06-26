@@ -13,7 +13,7 @@ from models.faster_rcnn import get_model
 
 
 
-def dataset_train(experiment_name,dataset_path,epochs=5,imgsz=416,momentum=0.9,lr=0.005):
+def dataset_train(experiment_name,dataset_path,epochs=5,imgsz=416,momentum=0.9,lr=0.005,batch_size=2):
     
     """
     Addestra un modello Faster R-CNN con un backbone ResNet50 su un set di dati personalizzato.
@@ -27,7 +27,7 @@ def dataset_train(experiment_name,dataset_path,epochs=5,imgsz=416,momentum=0.9,l
     Restituisce:
         torch.nn.Module: il modello addestrato.
     """
-    batch_size=2 #fisso per frcnn altrimenti da problemi
+    
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     save_weights_dir = f"{experiment_name}/weights"
     
